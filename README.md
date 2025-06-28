@@ -11,7 +11,6 @@ Aplicación web ASP.NET Core MVC para la gestión de estudiantes y materias insc
 - ✅ Inscribir materias a estudiantes
 - ✅ Validaciones de negocio:
   - Máximo 3 materias con más de 4 créditos
-  - Máximo 12 créditos en total
   - No se puede inscribir la misma materia dos veces
 - ✅ Modal de confirmación para eliminar
 - ✅ Alertas de éxito y error
