@@ -1,0 +1,72 @@
+﻿@{
+    var student = ViewBag.Student as StudentCourseApp.Domain.Student;
+    var courses = ViewBag.Courses as List<StudentCourseApp.Domain.Course>;
+}
+
+<h2>Inscribir Materia</h2>
+<p><strong>Estudiante:</strong> @student?.Name (@student?.Document)</p>
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Enroll" method="post">
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" }) 
+            <input type="hidden" name="studentId" value="@student?.Id" />
+            <div class="form-group">
+                <label for="courseId">Materia:</label>
+                @if (courses != null)
+                {
+                    <select name="courseId" class="form-control">
+                        @foreach (var c in courses)
+                        {
+                            <option value="@c.Id">@c.Name (@c.Credits créditos)</option>
+                        }
+                    </select>
+                }
+            </div>
+            <button type="submit" class="btn btn-success" @(courses == null || !courses.Any() ? "disabled" : "")>
+                Inscribir
+            </button>
+            <a asp-action="Index" class="btn btn-secondary">Volver</a>
+        </form>
+
+        @if (student != null && student.Enrollments.Any())
+        {
+            var totalMaterias = student.Enrollments.Count;
+            var materiasAltas = student.Enrollments.Count(e => e.Course.Credits > 4);
+            var totalCreditos = student.Enrollments.Sum(e => e.Course.Credits);
+
+            <hr />
+            <h4>Resumen de inscripción</h4>
+            <ul>
+                <li><strong>Total de materias inscritas:</strong> @totalMaterias</li>
+                <li><strong>Materias con más de 4 créditos:</strong> @materiasAltas</li>
+                <li><strong>Total de créditos:</strong> @totalCreditos</li>
+            </ul>
+
+            <h5>Materias inscritas:</h5>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Código</th>
+                        <th>Créditos</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var enrollment in student.Enrollments)
+                    {
+                        <tr>
+                            <td>@enrollment.Course.Name</td>
+                            <td>@enrollment.Course.Code</td>
+                            <td>@enrollment.Course.Credits</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+
+    </div>
+</div>
+
+@{
+}

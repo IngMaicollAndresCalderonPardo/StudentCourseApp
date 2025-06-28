@@ -1,0 +1,36 @@
+﻿@{
+    ViewData["Title"] = "Inicio";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Bienvenido a StudentCourseApp</h1>
+    <p class="lead">Esta aplicación web permite gestionar estudiantes, materias y sus inscripciones.</p>
+
+    <hr />
+
+    <h4>Funcionalidades principales:</h4>
+    <ul class="list-unstyled text-start d-inline-block">
+        <li>✅ Registrar, editar, eliminar y listar estudiantes.</li>
+        <li>✅ Registrar, editar, eliminar y listar materias.</li>
+        <li>✅ Inscribir materias a estudiantes con las siguientes reglas:</li>
+        <ul>
+            <li>🔒 No se permite inscribir más de <strong>3 materias con más de 4 créditos</strong>.</li>
+            <li>🔒 No se pueden inscribir materias duplicadas.</li>
+        </ul>
+    </ul>
+
+    <h4 class="mt-4">Aspectos técnicos:</h4>
+    <ul class="list-unstyled text-start d-inline-block">
+        <li>⚙️ Proyecto construido con <strong>.NET 8 / ASP.NET Core MVC</strong>.</li>
+        <li>📐 Arquitectura limpia aplicando principios SOLID.</li>
+        <li>💾 Base de datos local con <strong>Entity Framework Core</strong> SQLite (por defecto usando studentcourse.db, editable en appsettings.json).</li>
+        <li>🛡️ Validaciones tanto del lado del cliente como del servidor.</li>
+        <li>🔁 Inyección de dependencias y pruebas unitarias implementadas.</li>
+    </ul>
+
+    <hr />
+    <p>Puedes comenzar navegando por el menú superior: <strong>Estudiantes</strong> y <strong>Materias</strong>.</p>
+</div>
+
+<a asp-controller="Students" asp-action="Index" class="btn btn-primary mt-3">Ir a Estudiantes</a>
+<a asp-controller="Courses" asp-action="Index" class="btn btn-secondary mt-3 ms-2">Ir a Materias</a>

@@ -1,0 +1,66 @@
+﻿@model StudentCourseApp.Domain.Student
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Detalle Materias Inscritas</h1>
+
+<div>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+           Nombre
+        </dt>
+        <dd class = "col-sm-10">
+            @Model.Name
+        </dd>
+        <dt class = "col-sm-2">
+            Documento
+        </dt>
+        <dd class="col-sm-10">
+            @Model.Document
+        </dd>
+        <dt class = "col-sm-2">
+            Email
+        </dt>
+        <dd class = "col-sm-10">
+            @Model.Email
+        </dd>
+    </dl>
+</div>
+
+<div>
+    <h4>Materias Inscritas</h4>
+    <hr />
+    @if (Model.Enrollments.Any())
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Código</th>
+                    <th>Créditos</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var enrollment in Model.Enrollments)
+                {
+                    <tr>
+                        <td>@enrollment.Course.Name</td>
+                        <td>@enrollment.Course.Code</td>
+                        <td>@enrollment.Course.Credits</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p><i>Este estudiante no ha inscrito materias.</i></p>
+    }
+</div>
+
+<div>
+    <a asp-action="Index">Volver al listadode estudiantes</a>
+</div>

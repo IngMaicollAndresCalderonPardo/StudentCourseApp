@@ -1,0 +1,127 @@
+﻿@model IEnumerable<StudentCourseApp.Domain.Course>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Materias</h1>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["Success"]
+    </div>
+}
+
+<p>
+    <a asp-action="Create">Crear nueva Materia</a>
+</p>
+<input type="text" id="searchCourse" class="form-control mb-3" placeholder="Buscar...">
+
+<table class="table table-bordered" id="dataTableCourse">
+    <thead>
+        <tr>
+            <th>
+                Nombre
+            </th>
+            <th>
+                Codigo
+            </th>
+            <th>
+                Creditos
+            </th>
+            <th>
+                Acciones
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @item.Name
+                </td>
+                <td>
+                    @item.Code
+                </td>
+                <td>
+                    @item.Credits
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary btn-sm" title="Editar">
+                        <i class="bi bi-pencil-square"></i>
+                    </a>
+                    <button type="button" class="btn btn-danger btn-sm" title="Eliminar"
+                            data-bs-toggle="modal"
+                            data-bs-target="#confirmDeleteModal"
+                            data-id="@item.Id"
+                            data-name="@item.Name"
+                            data-code="@item.Code"
+                            data-credits="@item.Credits">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- Modal -->
+<div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form id="deleteForm" method="post">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title" id="deleteModalLabel">Confirmar eliminación</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <p>¿Estás seguro que deseas eliminar esta materia?</p>
+                    <ul>
+                        <li><strong>Nombre:</strong> <span id="courseName"></span></li>
+                        <li><strong>Código:</strong> <span id="courseCode"></span></li>
+                        <li><strong>Créditos:</strong> <span id="courseCredits"></span></li>
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-danger">Eliminar</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Script para el modal de eliminación
+        const deleteModal = document.getElementById('confirmDeleteModal');
+        deleteModal.addEventListener('show.bs.modal', function (event) {
+            const button = event.relatedTarget;
+            const id = button.getAttribute('data-id');
+            const name = button.getAttribute('data-name');
+            const code = button.getAttribute('data-code');
+            const credits = button.getAttribute('data-credits');
+
+            document.getElementById('courseName').textContent = name;
+            document.getElementById('courseCode').textContent = code;
+            document.getElementById('courseCredits').textContent = credits;
+
+            const form = document.getElementById('deleteForm');
+            form.action = `/Courses/Delete/${id}`;
+        });
+
+        // Script para buscador en la tabla
+        document.getElementById("searchCourse").addEventListener("keyup", function () {
+            const value = this.value.toLowerCase();
+            const rows = document.querySelectorAll("#dataTableCourse tbody tr");
+
+            rows.forEach(row => {
+                const rowText = row.textContent.toLowerCase();
+                row.style.display = rowText.includes(value) ? "" : "none";
+            });
+        });
+    </script>
+}
+

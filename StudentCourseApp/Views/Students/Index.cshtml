@@ -1,0 +1,143 @@
+﻿@model IEnumerable<StudentCourseApp.Domain.Student>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Estudiantes</h1>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["Success"]
+    </div>
+}
+
+<p>
+    <a asp-action="Create">Crear Nuevo</a>
+</p>
+
+<input type="text" id="searchInput" class="form-control mb-3" placeholder="Buscar...">
+
+<table class="table table-bordered" id="dataTable">
+    <thead>
+        <tr>
+            <th>
+                Nombre
+            </th>
+            <th>
+                Documento
+            </th>
+            <th>
+                Email
+            </th>
+            <th>
+                Acciones
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @item.Name
+                </td>
+                <td>
+                    @item.Document
+                </td>
+                <td>
+                    @item.Email
+                </td>
+                <td class="text-nowrap">
+                    <!-- Editar -->
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary btn-sm me-1" title="Editar">
+                        <i class="bi bi-pencil-square"></i>
+                    </a>
+
+                    <!-- Eliminar con modal -->
+                    <button type="button" class="btn btn-danger btn-sm me-1" title="Eliminar"
+                            data-bs-toggle="modal"
+                            data-bs-target="#confirmDeleteModal"
+                            data-id="@item.Id"
+                            data-name="@item.Name"
+                            data-document="@item.Document"
+                            data-email="@item.Email">
+                        <i class="bi bi-trash"></i>
+                    </button>
+
+                    <!-- Inscribir materia -->
+                    <a asp-action="Enroll" asp-route-id="@item.Id" class="btn btn-success btn-sm me-1" title="Inscribir materia">
+                        <i class="bi bi-journal-plus"></i>
+                    </a>
+
+                    <!-- Ver detalles -->
+                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-secondary btn-sm" title="Ver detalles">
+                        <i class="bi bi-eye"></i>
+                    </a>
+
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- Modal -->
+<div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form id="deleteForm" method="post">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title" id="deleteModalLabel">Confirmar eliminación</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <p>¿Estás seguro que deseas eliminar al siguiente estudiante?</p>
+                    <ul>
+                        <li><strong>Nombre:</strong> <span id="studentName"></span></li>
+                        <li><strong>Documento:</strong> <span id="studentDocument"></span></li>
+                        <li><strong>Email:</strong> <span id="studentEmail"></span></li>
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-danger">Eliminar</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Script para el modal de eliminación
+        const deleteModal = document.getElementById('confirmDeleteModal');
+        deleteModal.addEventListener('show.bs.modal', function (event) {
+            const button = event.relatedTarget;
+            const id = button.getAttribute('data-id');
+            const name = button.getAttribute('data-name');
+            const documentValue = button.getAttribute('data-document');
+            const email = button.getAttribute('data-email');
+
+            // Rellenar los campos del modal
+            document.getElementById('studentName').textContent = name;
+            document.getElementById('studentDocument').textContent = documentValue;
+            document.getElementById('studentEmail').textContent = email;
+
+            // Configurar la acción del formulario
+            const form = document.getElementById('deleteForm');
+            form.action = `/Students/Delete/${id}`;
+        });
+
+         // Script para buscador en la tabla
+        document.getElementById("searchInput").addEventListener("keyup", function () {
+            const value = this.value.toLowerCase();
+            const rows = document.querySelectorAll("#dataTable tbody tr");
+
+            rows.forEach(row => {
+                const rowText = row.textContent.toLowerCase();
+                row.style.display = rowText.includes(value) ? "" : "none";
+            });
+        });
+    </script>
+}
